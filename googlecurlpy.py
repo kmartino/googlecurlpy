@@ -3,6 +3,7 @@
 # http://blog.martindoms.com/2009/08/15/using-the-google-reader-api-part-1/
 # http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
 # http://www.niallkennedy.com/blog/2005/12/google-reader-api.html
+# http://www.25hoursaday.com/weblog/CommentView.aspx?guid=D27EBDD5-EA53-4135-BA08-5A99D5C34290
 
 # post-process functions that take webscript results and retrieve 
 # variables for later calls in the testSuite
