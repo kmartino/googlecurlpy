@@ -1,0 +1,37 @@
+== googlecurlpy.py
+
+This simple script exercises the Google Reader API to add a feed to your subscription list with a label and a tag.  The script exercises a few APIs along the way, just as an example to learn from.  
+
+The script uses cURL for communication with the API so that API calls can easily be observed, shared, and called independently of the script.  This makes debugging API useage with a team easier.  Most computers come with cURL installed and for those that don't you can easily do so.
+
+Essentially this Python script acts as a cURL wrapper, enabling the parsing of responses so that variables can be captured and sent to subsequent responses.
+
+== Getting Started
+
+1. Install cURL binaries and add it to your PATH:
+
+http://curl.haxx.se/
+
+2. python googlecurlpy.py
+
+Enjoy!
+
+== Future Direction
+
+Test cases and an actual GUI could be easily added to the script.  
+
+== GUI Possibilities
+
+http://docs.python.org/library/curses.html
+
+http://wiki.python.org/moin/TkInter
+
+http://pyjs.org/
+
+http://wiki.python.org/moin/GuiProgramming
+
+== Test Possibilities
+
+http://docs.python.org/library/unittest.html
+
+http://diveintopython.org/unit_testing/index.html

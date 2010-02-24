@@ -1,3 +1,4 @@
+# Prior art to look at:
 # http://blog.gpowered.net/2007/08/google-reader-api-functions.html
 # http://blog.martindoms.com/2009/08/15/using-the-google-reader-api-part-1/
 # http://blog.martindoms.com/2009/08/15/using-the-google-reader-api-part-1/
@@ -5,9 +6,9 @@
 # http://www.niallkennedy.com/blog/2005/12/google-reader-api.html
 # http://www.25hoursaday.com/weblog/CommentView.aspx?guid=D27EBDD5-EA53-4135-BA08-5A99D5C34290
 
-# post-process functions that take webscript results and retrieve 
-# variables for later calls in the testSuite
+
 def process_login(result, opts):
+    '''This function captures the AUTH, LSID, and SID from the login call'''
     auth_resp_dict = dict(x.split('=') for x in result.split('\n') if x)
     opts['auth'] = auth_resp_dict["Auth"]
     opts['lsid'] = auth_resp_dict["LSID"]
@@ -16,6 +17,7 @@ def process_login(result, opts):
     return opts
 
 def process_token(result, opts):
+    '''This function captures the auth token from the response'''
     opts['token'] = result
     return opts
 
@@ -75,9 +77,8 @@ def run_bash(cmd):
     out = p.stdout.read().strip()
     return out  
 
-# This function interpolates variables against the curl command string
 def parse_vars(cmd, opts):
-    '''This function takes a string and variable substutes values in the the opts hash argument.'''
+    '''This function interpolates variables in the opts dictionary with the cmd string.'''
     for (k, v) in opts.items():
         optcmd = "{%s}" % k
         cmd = cmd.replace(optcmd, v)
@@ -88,13 +89,18 @@ def main():
     import getpass
 
     opts = {}
-    opts['user'] = raw_input('User: ')
-    opts['password'] = getpass.getpass(prompt='Passwpord: ')
+    opts['user'] = raw_input('User: ').encode('utf-8')
+    opts['password'] = getpass.getpass(prompt='Password: ')
+    opts['feed'] = raw_input('Feed (ex http://www.philly.com/blinq.rss): ').encode('utf-8')
+    opts['label'] = raw_input('Label/Folder (ex blogroll): ').encode('utf-8')
+    opts['tag'] = raw_input('Tag (ex philly): ').encode('utf-8')
 
-    opts['tag'] = 'blogroll'.encode('utf-8')
-    opts['feed'] = 'http://www.philly.com/blinq.rss'.encode('utf-8')
+    #opts['feed'] = 'http://www.philly.com/blinq.rss'.encode('utf-8')
+    #opts['label'] = 'philly'
+    #opts['tag'] = 'blogroll'.encode('utf-8')
+
     opts['client'] = opts['user'] + "@gmail.com".encode('utf-8')
-    opts['label'] = 'philly'
+
 
     # run each curl command against system
     for curl_cmd in curl_suite:
