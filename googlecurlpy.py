@@ -28,7 +28,7 @@ curl_suite = [
      "post_process":process_login},
 
     {"name":"get token",
-     "curl_statement":'curl -G -b "{Cookie}" http://www.google.com/reader/api/0/token',
+     "curl_statement":'curl -G -b "{Cookie}" https://www.google.com/reader/api/0/token',
      "desciption":"retrieves a token",
      "post_process":process_token},
    
@@ -86,21 +86,32 @@ def parse_vars(cmd, opts):
 
 # Our main routine
 def main():
+    import pickle
     import getpass
+    import os
 
     opts = {}
-    opts['user'] = raw_input('User: ').encode('utf-8')
-    opts['password'] = getpass.getpass(prompt='Password: ')
-    opts['feed'] = raw_input('Feed (ex http://www.philly.com/blinq.rss): ').encode('utf-8')
-    opts['label'] = raw_input('Label/Folder (ex blogroll): ').encode('utf-8')
-    opts['tag'] = raw_input('Tag (ex philly): ').encode('utf-8')
+    if os.path.isfile("opts.p"):
+        opts = pickle.load(open("opts.p")).copy()
 
-    #opts['feed'] = 'http://www.philly.com/blinq.rss'.encode('utf-8')
-    #opts['label'] = 'philly'
-    #opts['tag'] = 'blogroll'.encode('utf-8')
+    if len(opts) > 0:
+        print opts
+        opts['use_defaults'] = raw_input('Use these defaults (y/n): ')
 
+    if len(opts) > 0 and opts.has_key('use_defaults') and opts['use_defaults'] == 'y':
+        print 'Using defaults.'
+        opts['feed'] = raw_input('Feed (ex http://www.philly.com/blinq.rss): ').encode('utf-8')
+    else:
+        opts['feed'] = raw_input('Feed (ex http://www.philly.com/blinq.rss): ').encode('utf-8')
+        opts['label'] = raw_input('Label/Folder (ex blogroll): ').encode('utf-8')
+        opts['tag'] = raw_input('Tag (ex philly): ').encode('utf-8')
+        opts['user'] = raw_input('User: ').encode('utf-8')
+        opts['save'] = raw_input('Save defaults (y/n)?: ')
+        if opts['save'] == 'y':
+            pickle.dump({'label':opts['label'], 'tag':opts['tag'], 'user':opts['user']}, open("opts.p", "w"))
+
+    opts['password'] = getpass.getpass(prompt='Password: ')           
     opts['client'] = opts['user'] + "@gmail.com".encode('utf-8')
-
 
     # run each curl command against system
     for curl_cmd in curl_suite:
@@ -112,7 +123,6 @@ def main():
             opts = curl_cmd["post_process"](result, opts)
         print result
         print "---------------------------\n"	    
-            
 	    
 if __name__ == '__main__':
     main()
